@@ -83,7 +83,8 @@ class GridPopulation(Population):
         elif genes_grid is not None:
             genome = species(None, None).get_genome()  # Get species' genome
             if not set(genes_grid.keys()).issubset(set(genome.keys())):
-                raise ValueError("Some grid parameters do not belong to the species' genome")
+              print(list(set(genes_grid.keys())- set(genome.keys())))
+              raise ValueError("Some grid parameters, printed above, do not belong to the species' genome")
             # Fill genes_grid with default parameters
             for gene, properties in genome.items():
                 if gene not in genes_grid:

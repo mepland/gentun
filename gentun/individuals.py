@@ -161,7 +161,7 @@ class XgboostIndividual(Individual):
         if genome is None:
             genome = {
                 # name: (default, min, max, logarithmic-scale-base)
-                'eta': (0.3, 0.001, 1.0, 10),
+                'learning_rate': (0.3, 0.001, 1.0, 10),
                 'min_child_weight': (1, 0, 10, None),
                 'max_depth': (6, 3, 10, None),
                 'gamma': (0.0, 0.0, 10.0, 10),
@@ -169,8 +169,8 @@ class XgboostIndividual(Individual):
                 'subsample': (1.0, 0.0, 1.0, -10),
                 'colsample_bytree': (1.0, 0.0, 1.0, -10),
                 'colsample_bylevel': (1.0, 0.0, 1.0, -10),
-                'lambda': (1.0, 0.1, 10.0, 10),
-                'alpha': (0.0, 0.0, 10.0, 10),
+                'reg_lambda': (1.0, 0.1, 10.0, 10),
+                'reg_alpha': (0.0, 0.0, 10.0, 10),
                 'scale_pos_weight': (1.0, 0.0, 10.0, 0)
             }
         if genes is None:
