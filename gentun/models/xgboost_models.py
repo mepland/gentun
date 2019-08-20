@@ -40,5 +40,4 @@ class XgboostModel(GentunModel):
             as_pandas=True
             # seed=0
         )
-        # return the negative mean auc of the trained model
         return cv_result[f"test-{self.eval_metric}-mean"].iloc[-1]
