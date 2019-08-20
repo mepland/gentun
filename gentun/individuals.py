@@ -157,6 +157,7 @@ class XgboostIndividual(Individual):
 
     def __init__(self, x_train, y_train, genome=None, genes=None, crossover_rate=0.5, mutation_rate=0.015,
                  booster='gbtree', objective='reg:linear', eval_metric='rmse', kfold=5,
+                 folds=None, verbose_eval=False,
                  num_boost_round=5000, early_stopping_rounds=100):
         if genome is None:
             genome = {
@@ -184,6 +185,8 @@ class XgboostIndividual(Individual):
         self.kfold = kfold
         self.num_boost_round = num_boost_round
         self.early_stopping_rounds = early_stopping_rounds
+        self.folds=folds
+        self.verbose_eval=verbose_eval
 
     @staticmethod
     def generate_random_genes(genome):
@@ -201,6 +204,7 @@ class XgboostIndividual(Individual):
         model = XgboostModel(
             self.x_train, self.y_train, self.genes, booster=self.booster, objective=self.objective,
             eval_metric=self.eval_metric, kfold=self.kfold, num_boost_round=self.num_boost_round,
+            folds=self.folds, verbose_eval=self.verbose_eval,
             early_stopping_rounds=self.early_stopping_rounds
         )
         self.fitness = model.cross_validate()
@@ -212,7 +216,9 @@ class XgboostIndividual(Individual):
             'eval_metric': self.eval_metric,
             'kfold': self.kfold,
             'num_boost_round': self.num_boost_round,
-            'early_stopping_rounds': self.early_stopping_rounds
+            'early_stopping_rounds': self.early_stopping_rounds,
+            'folds': self.folds,
+            'verbose_eval': self.verbose_eval,
         }
 
 
