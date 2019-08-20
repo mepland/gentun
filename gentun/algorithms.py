@@ -4,7 +4,7 @@ Genetic algorithm class
 """
 
 import random
-
+import pandas as pd
 
 class GeneticAlgorithm(object):
     """Evolve a population iteratively to find better
@@ -13,12 +13,14 @@ class GeneticAlgorithm(object):
     next one.
     """
 
-    def __init__(self, population, tournament_size=5, elitism=True):
+    def __init__(self, population, tournament_size=5, elitism=True, verbose=False):
         self.population = population
         self.x_train, self.y_train = self.population.get_data()
         self.tournament_size = tournament_size
         self.elitism = elitism
         self.generation = 1
+        self.verbose = verbose
+        self.results = []
 
     def get_population_type(self):
         return self.population.__class__
@@ -32,11 +34,16 @@ class GeneticAlgorithm(object):
     def evolve_population(self):
         if self.population.get_size() < self.tournament_size:
             raise ValueError("Population size is smaller than tournament size.")
-        print("Evaluating generation #{}...".format(self.generation))
+        if self.verbose:
+            print("Evaluating generation #{}...".format(self.generation))
         fittest = self.population.get_fittest()
-        print("Fittest individual is:")
-        print(fittest)
-        print("Fitness value is: {}\n".format(round(fittest.get_fitness(), 4)))
+        if self.verbose:
+            print("Fittest individual is:")
+            print(fittest)
+            print("Fitness value is: {}\n".format(round(fittest.get_fitness(), 4)))
+
+        self.results.append(dict({'generation': self.generation, 'best_fitness': fittest.get_fitness()}, **fittest.get_genes()))
+
         new_population = self.get_population_type()(
             self.population.get_species(), self.x_train, self.y_train, individual_list=[],
             maximize=self.population.get_fitness_criteria()
@@ -57,6 +64,14 @@ class GeneticAlgorithm(object):
         )
         return tournament.get_fittest()
 
+    def get_results(self):
+        df = pd.DataFrame(self.results)
+        cols = df.columns
+        fixed_cols = ['generation', 'best_fitness']
+        non_fixed_cols = list(set(cols) - set(fixed_cols))
+        cols = list(fixed_cols + sorted(non_fixed_cols))
+
+        return df[cols]
 
 class RussianRouletteGA(GeneticAlgorithm):
     """Simpler genetic algorithm used in the Genetic CNN paper.
