@@ -5,7 +5,11 @@ Population class
 
 import itertools
 import operator
+import multiprocessing as mp
 
+def _fitness(_individual):
+    _individual.get_fitness()
+    return _individual
 
 class Population(object):
     """Group of individuals of the same species, that is,
@@ -56,6 +60,17 @@ class Population(object):
         if self.maximize:
             return max(self.individuals, key=operator.methodcaller('get_fitness'))
         return min(self.individuals, key=operator.methodcaller('get_fitness'))
+
+    def get_fittest_parallel(self):
+        # Parallelizing using Pool.map() on one machine
+
+        pool = mp.Pool(mp.cpu_count())
+        fitness_results = pool.map(_fitness, self.individuals)
+        pool.close()
+
+        if self.maximize:
+            return max(fitness_results, key=operator.methodcaller('get_fitness'))
+        return min(fitness_results, key=operator.methodcaller('get_fitness'))
 
     def get_data(self):
         return self.x_train, self.y_train
