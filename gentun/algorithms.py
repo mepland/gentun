@@ -13,14 +13,14 @@ class GeneticAlgorithm(object):
     next one.
     """
 
-    def __init__(self, population, tournament_size=5, elitism=True, verbosity=0, multiprocessing=True):
+    def __init__(self, population, tournament_size=5, elitism=True, verbosity=0): # , multiprocessing=True
         self.population = population
         self.x_train, self.y_train = self.population.get_data()
         self.tournament_size = tournament_size
         self.elitism = elitism
         self.generation = 1
         self.verbosity = verbosity
-        self.multiprocessing = multiprocessing
+        # self.multiprocessing = multiprocessing
         self.results = []
 
     def get_population_type(self):
@@ -38,10 +38,13 @@ class GeneticAlgorithm(object):
         if self.verbosity > 0:
             print("Evaluating generation #{}...".format(self.generation))
 
+        '''
         if self.multiprocessing:
             fittest = self.population.get_fittest_parallel()
         else:
             fittest = self.population.get_fittest()
+        '''
+        fittest = self.population.get_fittest()
 
         if self.verbosity > 1:
             print("Fittest individual is:")
